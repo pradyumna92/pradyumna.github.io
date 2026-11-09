@@ -6,3 +6,92 @@ html,body{max-width:100%;overflow-x:clip}main,section,article,form,.hero-copy,.b
 .lab-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.lab-presets button{border:1px solid var(--line);border-radius:20px;background:var(--bg);color:var(--ink);padding:8px 12px;font-size:11px;min-height:40px}.lab-widget>label{display:flex;justify-content:space-between;font-size:13px}.lab-explanation{font-size:11px;margin:-8px 0 20px}.defect-controls{display:flex;gap:10px;align-items:center;margin:12px 0 20px}.defect-controls button{border:1px solid var(--line);background:var(--bg);border-radius:8px;width:42px;height:42px;font-size:22px}.defect-controls input{width:75px;text-align:center;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}.gate-checklist p{font-size:12px;padding:4px 0}.pill.signoff{background:var(--accent);color:var(--accent-ink)}.pill.review{color:#87bdff}.lab-widget input[type=range]{height:24px}#gate-result{min-height:150px}
 
 .readiness-intro{max-width:760px;margin:24px 0}.readiness>.lab-explanation{max-width:850px;margin:0 0 28px}.readiness-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr);gap:24px;margin-bottom:24px}.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.evidence-grid fieldset{min-width:0;border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--panel)}.evidence-grid legend{color:var(--accent);font-size:13px;padding:0 8px}.evidence-grid label{display:block;font-size:13px;margin:12px 0}.evidence-grid input:not([type=checkbox]),.evidence-grid textarea{display:block;width:100%;min-width:0;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:9px;font:inherit;margin-top:7px}.evidence-grid input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px;vertical-align:middle;margin-right:7px}.evidence-grid small,.readiness-result small{display:block;color:var(--muted);font-size:11px;line-height:1.6}.test-counts{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.test-bar{display:flex;height:12px;background:var(--bg);border-radius:8px;overflow:hidden;margin:12px 0}.test-bar .passed{background:#92d779}.test-bar .failed{background:#f08080}.test-bar .blocked{background:#edc269}.test-bar .notrun{background:#8b98aa}#test-metrics{font-size:12px}.release-controls{grid-column:1/-1}.readiness-result{align-self:start;position:sticky;top:105px;border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:28px}.readiness-result h3{font-size:26px;margin:16px 0}.decision-go{color:var(--accent)}.decision-no{color:#f08080}.decision-pending{color:#edc269}#qa-state{font-size:13px;font-weight:600}.readiness-result #gate-result{margin:20px 0;padding:0;background:none}.readiness-result #gate-result p{font-size:13px;margin:12px 0}.decision-path{padding-left:20px;font-size:12px;color:var(--muted);line-height:2}.evidence-grid output{float:right;color:var(--accent)}@media(max-width:900px){.readiness-layout{grid-template-columns:1fr}.readiness-result{position:static}}@media(max-width:540px){.evidence-grid{grid-template-columns:1fr}.readiness-result{padding:20px}.evidence-grid fieldset{padding:16px}}
+
+
+/* Compact portfolio rhythm: shorter sections without hiding content or controls. */
+html{scroll-padding-top:76px}
+header{height:68px}
+.section{padding:54px 6%}
+.section h2{margin-top:10px}
+.section-heading{margin-bottom:24px}
+h2{font-size:clamp(31px,3.25vw,47px);letter-spacing:-1.8px}
+.hero{padding-top:20px}
+.hero-grid{padding:28px 0 32px;gap:4%}
+.hero h1{font-size:clamp(42px,4.8vw,68px)}
+.portrait-row{margin-bottom:15px}
+.portrait{width:82px;height:104px}
+.name{margin-bottom:13px}
+.intro{margin-top:16px;line-height:1.6}
+.hero .actions{margin-top:18px}
+.hero-stats{margin-top:24px}
+.hero-bottom{padding:12px 0}
+.mission{padding:18px}
+.orbit{height:218px}
+.ring{width:194px;height:194px}.r2{width:148px;height:148px}.r3{width:102px;height:102px}
+.core{width:86px;height:86px;font-size:51px}
+.mission-foot{margin-top:13px;padding-top:12px}
+.ticker{padding-block:12px}
+.overview>div>p{margin-top:12px}
+.brief{padding:18px}
+.tabs{margin-bottom:14px}
+#brief-content h3{margin:8px 0;font-size:19px}
+li{margin:7px 0}
+.summary-grid{gap:18px}
+.employers button{padding:14px 12px}
+.career{gap:22px}
+.job{min-height:285px;padding:24px}
+.job h3{font-size:24px;margin-top:10px}
+.job-summary{margin-top:10px}
+.job li{line-height:1.55}
+.filters{margin-bottom:16px}
+.story{padding:17px}
+.metric{font-size:40px;margin-top:12px}
+.story h3{min-height:0;margin-top:10px;font-size:15px}
+.story summary{margin-top:10px;padding-top:10px}
+.recognition{margin-top:20px;padding-top:16px}
+.resume-success{margin-top:20px}
+.readiness-intro{margin:12px 0}
+.readiness>.lab-explanation{margin-bottom:16px}
+.lab-presets{margin-bottom:14px}
+.readiness-layout{gap:16px;margin-bottom:14px}
+.evidence-grid{gap:12px}
+.evidence-grid fieldset{padding:14px}
+.evidence-grid label{margin:8px 0}
+.evidence-grid input:not([type=checkbox]),.evidence-grid textarea{padding:7px;margin-top:4px}
+.evidence-grid input[type=range]{margin:9px 0}
+.readiness-result{top:82px;padding:20px}
+.readiness-result h3{margin:9px 0}
+.readiness-result #gate-result{margin:12px 0;min-height:0}
+.readiness-result #gate-result p{margin:7px 0}
+.test-bar{margin:8px 0}
+.skill-grid{gap:12px}
+.contact .actions{margin-top:16px}
+@media(max-width:800px){
+ header{height:64px}
+ header nav{top:64px}
+ .section{padding:38px 5%}
+ .section-heading{gap:14px;margin-bottom:20px}
+ .hero-grid{padding:22px 0;gap:20px}
+ .hero .intro{font-size:14px}
+ .hero-stats{margin-top:18px}
+ .mission{max-width:480px}
+ .orbit{height:185px}
+ .ring{width:165px;height:165px}.r2{width:125px;height:125px}.r3{width:90px;height:90px}
+ .core{width:76px;height:76px;font-size:44px}
+ .overview,.career,.lab,.message-section{gap:18px}
+ .employers button{min-height:0;padding:11px 9px}
+ .job{min-height:0;padding:20px}
+ .readiness-result{position:static}
+ .story{padding:16px}
+ .metric{font-size:37px}
+}
+@media(max-width:420px){
+ .section{padding:32px 5%}
+ .hero h1{font-size:36px}
+ .portrait{width:72px;height:92px}
+ .orbit{height:170px}
+ .mission{padding:14px}
+ .employers{gap:3px}
+ .job{padding:16px}
+ .evidence-grid fieldset{padding:12px}
+}
