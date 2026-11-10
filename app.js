@@ -48,16 +48,35 @@ const knowledge=[
 {keys:/accenture/,answer:'At Accenture (January 2015–January 2018), he built web and mobile frameworks, improved API validation efficiency and accuracy by 30% with Postman and saved 120 hours of monthly manual effort through regression automation.'},
 {keys:/experience|career|company|companies|liveperson|background|about|summary|who/,answer:'Pradyumna Vissapragada is a Senior Test Automation Engineer with 11+ years of experience. His updated resume lists LivePerson (June 2020–present), Synechron (April 2019–January 2020), Nisum (January 2018–April 2019) and Accenture (January 2015–January 2018). He combines automation architecture with QA and release leadership.'},
 {keys:/hello|hi\b|hey|thank/,answer:'Hello! I can help you explore Pradyumna’s career, skills, leadership, achievements or contact details. What would you like to know?'}];
-function answerQuestion(q){const employer=jobs.find(j=>q.toLowerCase().includes(j.company.split(' ')[0].toLowerCase()));if(employer)return {answer:employer.company+' | '+employer.role+' | '+employer.dates+'\n'+employer.points.join('\n')};if(/mentor|coach|operational efficiency|workshop/i.test(q))return {answer:"Empowering Mentor & Technical Coach, instrumental in running technical workshops, upskilling engineering talent and boosting overall operational efficiency by 30%. Agile & Process Transformation: Led Agile coaching sessions and workshop modules, driving continuous process improvements and cross-team alignment."};return knowledge.find(k=>k.keys.test(q.toLowerCase()))||{answer:'I don’t have a verified answer to that in the resume. Try a question about career, skills, leadership or achievements, or contact Pradyumna directly.',contact:true}}
+function answerQuestion(q,previousTopic=''){
+ const text=q.trim().toLowerCase();
+ if(/^(hi|hello|hey|good (morning|afternoon|evening)|namaste|hello there)[!. ]*$/.test(text))
+   return {answer:"Hello! Welcome to Pradyumna’s portfolio. Would you like to know about his automation skills, professional experience or release leadership?"};
+ if(/^(thanks|thank you|thank you so much|great|awesome|cool)[!. ]*$/.test(text))
+   return {answer:"You’re welcome! Is there anything else you’d like to know about Pradyumna’s work?"};
+ if(/^(bye|goodbye|see you)[!. ]*$/.test(text))
+   return {answer:"Thanks for visiting! If you'd like to discuss an opportunity, please email Pradyumna at pradyumnavissapragada@gmail.com.",contact:true};
+ if(/(email|contact|reach|hire|interview|opportunity|connect|message)/.test(text))
+   return {answer:"You can reach Pradyumna at pradyumnavissapragada@gmail.com. Feel free to email him about roles, interviews or collaborations.",contact:true};
+ let query=q;
+ if(/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/.test(text)&&previousTopic)
+   query=previousTopic;
+ const employer=jobs.find(j=>query.toLowerCase().includes(j.company.split(' ')[0].toLowerCase()));
+ if(employer)return {answer:employer.company+' | '+employer.role+' | '+employer.dates+'\n'+employer.points.join('\n')};
+ if(/mentor|coach|operational efficiency|workshop/i.test(query))
+   return {answer:"Pradyumna has mentored engineers, led technical workshops and promoted shared quality ownership across teams. He brings hands-on automation experience together with QA and release leadership."};
+ const matched=knowledge.find(k=>k.keys.test(query.toLowerCase()));
+ return matched||{answer:"I don't have a reliable answer to that question. Please email Pradyumna at pradyumnavissapragada@gmail.com and he'll be able to help directly.",contact:true};
+}
 let readAnswers=false,recognizer,listening=false,lastTrigger;
 function message(text,role,contact=false){const b=el('div',undefined,'bubble '+role);b.append(el('small',role==='user'?'YOU':'PORTFOLIO GUIDE'),el('p',text));if(contact){const links=el('div',undefined,'chat-links');[['Email Pradyumna ↗','mailto:pradyumnavissapragada@gmail.com'],['Call Pradyumna ↗','tel:+4915238763124']].forEach(([t,url])=>{const a=el('a',t);a.href=url;links.append(a)});b.append(links)}$('#chat-log').append(b);$('#chat-log').scrollTop=$('#chat-log').scrollHeight}
 function openChat(trigger){lastTrigger=trigger;$('#chat-panel').hidden=false;$('#chat-launch').setAttribute('aria-expanded','true');$('#question').focus()}function closeChat(){$('#chat-panel').hidden=true;$('#chat-launch').setAttribute('aria-expanded','false');recognizer?.abort();window.speechSynthesis?.cancel();lastTrigger?.focus()}
 $$('[data-chat]').forEach(b=>b.onclick=()=>openChat(b));$('#chat-launch').onclick=()=>$('#chat-panel').hidden?openChat($('#chat-launch')):closeChat();$('#close-chat').onclick=closeChat;$('#chat-panel').onkeydown=e=>{if(e.key==='Escape')closeChat()};
 message('Hi, I’m Pradyumna’s portfolio guide. Ask about his career, technical skills or impact. I can also help you contact him directly.','assistant');
-let chatBusy=false;const history=[];
+let chatBusy=false;const history=[];let lastKnownTopic="";
 async function ask(q){q=q.trim().slice(0,500);if(!q||chatBusy)return;message(q,'user');$('#question').value='';$('#send-question').disabled=true;let a;
-if(config.apiBase&&config.turnstileSiteKey){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch{a={answer:'The AI assistant is unavailable right now. Please email Pradyumna or call him directly.',contact:true}}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
-else a=answerQuestion(q);
+if(config.apiBase&&config.turnstileSiteKey){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch{a=answerQuestion(q,lastKnownTopic)}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
+else a=answerQuestion(q,lastKnownTopic);\nif(!a.contact&& !/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
 message(a.answer,'assistant',a.contact);if(readAnswers&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(a.answer))}}
 $('#question').oninput=()=>$('#send-question').disabled=!$('#question').value.trim();$('#chat-form').onsubmit=e=>{e.preventDefault();ask($('#question').value)};$$('[data-question]').forEach(b=>b.onclick=()=>ask(b.dataset.question));
 $('#speak').onclick=()=>{if(!('speechSynthesis'in window)){$('#voice-status').textContent='Audio playback isn’t supported here. Please read the text answers.';return}readAnswers=!readAnswers;$('#speak').textContent='Read answers: '+(readAnswers?'on':'off');$('#speak').setAttribute('aria-pressed',String(readAnswers));if(!readAnswers)speechSynthesis.cancel()};
