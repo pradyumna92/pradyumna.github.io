@@ -140,12 +140,19 @@ $$('[data-chat]').forEach(b=>b.onclick=()=>openChat(b));$('#chat-launch').onclic
 message('Hi, I’m Pradyumna’s portfolio guide. Ask about his career, technical skills or impact. I can also help you contact him directly.','assistant');
 let chatBusy=false;const history=[];let lastKnownTopic="";
 const recruiterFacts={
- career:"Pradyumna is a QA/SDET and release-leadership professional with over 11 years of experience. His portfolio lists LivePerson, Synechron, Nisum and Accenture. His work spans UI, API and mobile automation, CI/CD, quality strategy and release coordination.",
+ career:"Pradyumna is a QA/SDET and release-leadership professional with more than 11 years of experience. His portfolio lists LivePerson, Synechron, Nisum and Accenture. His work spans UI, API and mobile automation, CI/CD, quality strategy and release coordination.",
  hire:"Pradyumna combines hands-on automation engineering with QA and release leadership. His documented skills include Selenium, Java, Appium, API testing, GitLab CI/CD and BrowserStack, alongside mentoring, release planning and risk-based quality decisions. This makes him worth considering for senior automation and QA leadership roles; final fit depends on your team's requirements.",
  automation:"Pradyumna's portfolio documents web automation with Selenium and Java, mobile testing with Appium and BrowserStack, and API testing with Postman and REST Assured. The Playwright/TypeScript hybrid framework shown here is an illustrative design, not verified production experience.",
  release:"Pradyumna's portfolio describes release coordination, QA strategy, quality governance and risk-based testing. Release readiness should be assessed against agreed objectives, critical-path coverage, executed and remaining tests, defect severity, non-functional criteria and formally accepted residual risks. ISTQB does not mandate a universal pass percentage.",
  achievements:"The portfolio reports 90% of manual test suites transitioned to automation and $200K in annual savings, 70% shorter test execution, and 120 hours of manual effort saved monthly in an Accenture initiative. These are resume-reported outcomes, not independently audited results.",
- employers:"Pradyumna's portfolio lists LivePerson GmbH, Synechron Technologies, Nisum Technologies and Accenture.",
+ employers:"Pradyumna's portfolio lists LivePerson GmbH (June 2020 onward in the published career timeline), Synechron Technologies (April 2019–January 2020), Nisum Technologies (January 2018–April 2019) and Accenture (January 2015–January 2018). His most recently listed role is Release Lead & Senior Automation Engineer at LivePerson.",
+ liveperson:"At LivePerson, the portfolio lists Pradyumna as Release Lead & Senior Automation Engineer from June 2020. His responsibilities include release coordination, QA strategy, automation across web/API/mobile and quality governance for a four-engineer QA unit. The portfolio timeline has not yet been updated with an end date.",
+ synechron:"At Synechron Technologies (April 2019–January 2020), Pradyumna was a Senior Automation Test Engineer. The portfolio highlights Selenium, Java, Cucumber BDD, regression efficiency, Jenkins execution and coaching.",
+ nisum:"At Nisum Technologies (January 2018–April 2019), Pradyumna was an Automation Team Lead. His work included Java/Selenium automation, code reviews, guiding three engineers and release coordination.",
+ accenture:"At Accenture (January 2015–January 2018), Pradyumna worked in test automation, including regression automation and API testing. His portfolio reports saving 120 hours of manual testing effort per month.",
+ education:"Education and professional certifications are not verified in the current portfolio. Please contact Pradyumna for the latest details.",
+ location:"The published portfolio lists Pradyumna as based in Magdeburg, Germany.",
+ cv:"The portfolio summarizes Pradyumna's experience, but P-Bot cannot guarantee that a downloadable CV is available. Request the latest resume by emailing pradyumnavissapragada@gmail.com.",
  skills:"His documented toolkit includes Java, JavaScript/Node.js, Selenium WebDriver, Appium, Cucumber, JUnit, TestNG, Postman, REST Assured, GitLab CI/CD, Jenkins and BrowserStack. Playwright/TypeScript is featured as an illustrative portfolio framework.",
  contact:"You can contact Pradyumna at pradyumnavissapragada@gmail.com or +49 152 38763124 to discuss interviews and opportunities.",
  interview:"To schedule an interview, please email Pradyumna at pradyumnavissapragada@gmail.com. P-Bot cannot book a meeting or send an invitation.",
@@ -165,6 +172,13 @@ function localRecruiterAnswer(q){
  if(/^(match this job description)$/.test(t))return answer("job");
  if(/^(how can i schedule an interview)$/.test(t))return answer("interview",true);
  if(/^(what is happening around the world|world news|latest news|what's happening in the world)$/.test(t))return answer("news");
+ if(/\b(liveperson|live person)\b/.test(t))return answer("liveperson");
+ if(/\bsynechron\b/.test(t))return answer("synechron");
+ if(/\bnisum\b/.test(t))return answer("nisum");
+ if(/\baccenture\b/.test(t))return answer("accenture");
+ if(/\b(education|degree|university|certification|certified)\b/.test(t))return answer("education",true);
+ if(/\b(resume|curriculum vitae|download cv|latest cv)\b/.test(t))return answer("cv",true);
+ if(/\b(where is|where does .* live|based in|location|which city|magdeburg)\b/.test(t))return answer("location");
  if(/\b(why (should|would) (we|i|an employer|a company) hire|why hire|why choose|what makes .* (stand out|a good candidate|a strong candidate|a suitable candidate)|what are (his|pradyumna's) strengths)\b/.test(t))return answer("hire");
  if(/\b(expected salary|salary expectation|notice period|earliest joining|joining date|availability|work authorization|visa status|citizenship|personal address)\b/.test(t))return answer("unknown",true);
  if(/\b(cypress|python|robot framework|five years of playwright|professional playwright|playwright in production|aws certification|istqb certified)\b/.test(t)&&/\b(has|does|did|experience|worked|certified|used|how long)\b/.test(t))return answer("unknown",true);
@@ -175,11 +189,12 @@ function localRecruiterAnswer(q){
  if(/\b(how many years|years of experience|career summary|professional background|career history|tell me about his career)\b/.test(t))return answer("career");
  if(/\b(release readiness|release leadership|release lead|release management|go.no.go|quality governance)\b/.test(t)&&!/\b(design|propose|recommend|scenario|hypothetical|imagine|suppose|what if|should we release|given a release)\b/.test(t))return answer("release");
  if(/\b(automation framework|hybrid framework|playwright framework)\b/.test(t)&&/\b(explain|showcase|portfolio|featured|example)\b/.test(t))return answer("framework");
- if(/\b(job description|job posting|role requirements|job requirements|compare.*(job|role)|match.*(job|role)|fit for (this|the) role|candidate for (this|the) role)\b/.test(t))return null;
+ if(/\b(job description|job posting|role requirements|job requirements|compare.*(job|role)|match.*(job|role)|fit for (this|the) role|candidate for (this|the) role)\b/.test(t))return answer("job");
  if(/\b(automation experience|selenium|appium|browserstack|api testing|mobile testing|test automation)\b/.test(t)&&!/\b(design|create|propose|recommend|architect|roadmap|how would|scenario|strategy for)\b/.test(t))return answer("automation");
  if(/\b(technical skills|tech stack|technologies|tools|programming languages|what skills|his skills|pradyumna's skills)\b/.test(t))return answer("skills");
  if(/\b(what can you do|who are you|are you a bot)\b/.test(t))return {answer:"I'm P-Bot, an automated portfolio guide. I can explain verified career information and help with recruiter questions. Technical scenario analysis uses an AI service when available."};
  if(/^(tell me more|more details|can you elaborate|explain more|what about that|and that)$/.test(t)&&lastKnownTopic)return localRecruiterAnswer(lastKnownTopic);
+ if(/\b(who is|tell me about|professional profile|summary|career|experience|background|worked|role|position|skills|knowledge|qualifications|expertise|employer|company|companies|team|leadership|automation|testing|framework|project|achievement|impact|performance|release|qa|sdet|playwright|typescript|java|javascript|selenium|appium|api|ci\/cd|gitlab|jenkins|browserstack|postman|cucumber|junit|testng)\b/.test(t))return {answer:"I cannot verify that specific detail from the information published in this portfolio. I can describe Pradyumna's documented employers, skills, career highlights and release leadership, or you can contact him for clarification.",contact:true};
  return null;
 }
 async function ask(q){
@@ -189,12 +204,16 @@ async function ask(q){
  try{
   a=localRecruiterAnswer(q);
   if(!a){
+   const needsAI=/\b(design|create|propose|architect|hypothetical|imagine|scenario|roadmap|how would|recommend|develop a plan|build a framework|evaluate this release|compare these approaches)\b/i.test(q);
+   if(!needsAI){a={answer:'That detail is not confirmed in the published portfolio. Please contact Pradyumna for a verified answer.',contact:true};}
+   else {
    if(!config.apiBase)throw Error('AI endpoint not configured');
    chatBusy=true;
    const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');
    if(typeof data.answer!=='string'||!data.answer.trim())throw Error('Empty AI response');
    a={answer:data.answer,contact:!!data.handoff};
    history.push({role:'user',content:q},{role:'assistant',content:a.answer});
+   }
   }
  }catch(err){
   console.warn('P-Bot AI request failed:',err);
