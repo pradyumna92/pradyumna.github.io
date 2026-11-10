@@ -95,3 +95,24 @@ li{margin:7px 0}
  .job{padding:16px}
  .evidence-grid fieldset{padding:12px}
 }
+
+
+/* Compact, interactive automation architecture showcase. */
+.framework-layout{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.5fr);gap:18px;margin-top:20px}
+.framework-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}
+.framework-option{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;color:var(--ink);min-height:95px}
+.framework-option strong,.framework-option small{display:block}
+.framework-option strong{font-size:14px}
+.framework-option small{color:var(--muted);font-size:11px;margin-top:7px;line-height:1.4}
+.framework-option[aria-pressed=true]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.framework-preview{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:19px}
+.framework-preview-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--accent);font-size:12px;font-weight:700}
+.framework-preview-head span:last-child{color:var(--muted);font-size:9px;letter-spacing:1px}
+.framework-preview>p{font-size:12px;margin:10px 0}
+.framework-preview pre{margin:12px 0;padding:14px;background:var(--bg);border-radius:9px;overflow:auto;max-height:245px;color:var(--ink);font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+.framework-preview>small{font-size:10px;color:var(--muted)}
+#lab-toggle{margin:4px 0 0;min-height:42px}
+#lab-details[hidden]{display:none!important}
+#lab-details{margin-top:20px}
+@media(max-width:800px){.framework-layout{grid-template-columns:1fr}.framework-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.framework-option{padding:11px;min-height:84px}.framework-option strong{font-size:12px}.framework-option small{font-size:10px}.framework-preview{padding:12px}.framework-preview pre{font-size:11px}}
