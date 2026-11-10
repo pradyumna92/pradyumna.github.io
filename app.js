@@ -186,7 +186,7 @@ function smallTalkAnswer(q){
  if(/^(who made you|who created you|who built you)$/.test(t))return say("I'm the virtual assistant featured on Pradyumna's portfolio. My role is to help recruiters and visitors explore his published professional information.");
  if(/^(what can you do|how can you help|can you help me|help|help me|what should i ask|show me options)$/.test(t))return say("You can ask about Pradyumna's career, employers, automation skills, release leadership, achievements, job suitability and contact details. I won't invent information missing from his portfolio.");
  if(/^(thank you|thanks|thanks a lot|thank you so much|thx|ty|appreciate it|cheers)$/.test(t))return say("You're very welcome! 😊 Is there anything else you'd like to know?");
- if(/^(bye|goodbye|see you|see you later|take care|good night|goodnight|talk later)$/.test(t))return say("Thanks for visiting! 👋 Have a great day. You can contact Pradyumna using the links in his portfolio.");
+ if(/^(bye|bye bye|byebye|goodbye|good bye|see you|see ya|see you soon|see you later|catch you later|take care|good night|goodnight|talk later|ciao|ciao ciao|farewell|until next time)$/.test(t))return {answer:"Thank you! Please contact Pradyumna",contact:true};
  if(/^(nice to meet you|pleased to meet you|great to meet you)$/.test(t))return say("Nice to meet you too! 😊 What would you like to explore?");
  if(/^(tell me a joke|say something funny|make me laugh)$/.test(t))return say("Why did the QA engineer cross the road? To verify the other side! 😄");
  if(/^(are you available|are you online|are you there|can you hear me|hello anyone there)$/.test(t))return say("Yes, I'm here! Ask me anything about Pradyumna's published professional background.");
