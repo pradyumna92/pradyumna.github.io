@@ -48,6 +48,27 @@ const knowledge=[
 {keys:/accenture/,answer:'At Accenture (January 2015–January 2018), he built web and mobile frameworks, improved API validation efficiency and accuracy by 30% with Postman and saved 120 hours of monthly manual effort through regression automation.'},
 {keys:/experience|career|company|companies|liveperson|background|about|summary|who/,answer:'Pradyumna Vissapragada is a Senior Test Automation Engineer with 11+ years of experience. His updated resume lists LivePerson (June 2020–present), Synechron (April 2019–January 2020), Nisum (January 2018–April 2019) and Accenture (January 2015–January 2018). He combines automation architecture with QA and release leadership.'},
 {keys:/hello|hi\b|hey|thank/,answer:'Hello! I can help you explore Pradyumna’s career, skills, leadership, achievements or contact details. What would you like to know?'}];
+const commonFAQs=[
+ {keys:/\b(what can you do|help|options|menu|topics|questions|faq)\b/i,answer:"I can answer questions about Pradyumna’s experience, employers, UI/API/mobile automation, frameworks, tools, CI/CD, release leadership, testing strategy, measurable achievements and contact details. What would you like to explore?"},
+ {keys:/\b(who (are|is) (you|this)|are you (a bot|human|real)|chatbot)\b/i,answer:"I’m an automated portfolio assistant, not Pradyumna himself. I use information published in this portfolio and can direct you to his email when I can’t verify an answer."},
+ {keys:/\b(years|how long|how much experience|seniority)\b/i,answer:"Pradyumna has over 11 years of experience in software quality engineering, automation and release leadership, including roles at LivePerson, Synechron, Nisum and Accenture."},
+ {keys:/\b(current role|latest role|present role|job title|position)\b/i,answer:"His portfolio lists his latest role at LivePerson as Release Lead & Senior Automation Engineer, combining quality governance, release coordination and automation engineering."},
+ {keys:/\b(why (hire|choose)|strengths|stand out|value bring)\b/i,answer:"His strengths combine hands-on UI, API and mobile automation, scalable test practices, mentoring and evidence-led release decisions. The portfolio also highlights measurable efficiency improvements."},
+ {keys:/\b(ui testing|web testing|frontend|end.to.end|e2e|selenium)\b/i,answer:"His web automation background includes Selenium WebDriver, Java and JavaScript-based testing. The portfolio also features an illustrative Playwright and TypeScript framework showcase."},
+ {keys:/\b(api testing|rest api|postman|rest assured|backend testing)\b/i,answer:"His API testing experience includes Postman, REST Assured, service validation and integrating API checks into broader test automation."},
+ {keys:/\b(mobile testing|android|ios|appium|browserstack)\b/i,answer:"He has worked on mobile automation using Appium and BrowserStack, alongside web and API testing."},
+ {keys:/\b(playwright|typescript|type script)\b/i,answer:"The portfolio demonstrates a proposed Playwright + TypeScript architecture for UI and API checks, reusable fixtures and CI quality gates. It is a conceptual showcase, not evidence of a deployed production project."},
+ {keys:/\b(ci\/cd|pipeline|jenkins|gitlab|continuous integration|devops)\b/i,answer:"His tooling includes Jenkins, GitLab CI/CD and BrowserStack. He uses automated test execution and feedback to support release confidence."},
+ {keys:/\b(test strategy|risk.based|test plan|regression|coverage|quality assurance)\b/i,answer:"His quality approach emphasizes risk-based scope, critical-path coverage, regression evidence, defect assessment and clear entry/exit criteria for release decisions."},
+ {keys:/\b(quality lab|go.no.go|signoff|sign.off|release readiness|release decision)\b/i,answer:"The Quality Lab is an interactive educational release-readiness simulation. It reviews objectives, test coverage, defects, residual risk and release approval. Its thresholds are illustrative team policy, not mandatory ISTQB rules."},
+ {keys:/\b(leadership style|collaboration|stakeholder|cross.functional)\b/i,answer:"His leadership approach emphasizes clear communication, shared quality ownership, mentoring and coordination between QA, Development, Product and DevOps."},
+ {keys:/\b(education|degree|university|certification|certified)\b/i,answer:"The current portfolio does not provide verified education or certification details. Please email Pradyumna for an up-to-date answer.",contact:true},
+ {keys:/\b(resume|cv|download)\b/i,answer:"Please use the resume or download option on the portfolio if available. For the most current CV, email Pradyumna directly.",contact:true},
+ {keys:/\b(portfolio|website|projects|showcase)\b/i,answer:"The portfolio includes a career explorer, measurable achievements, an interactive automation framework showcase, a release-readiness Quality Lab and a technical toolkit."},
+ {keys:/\b(time zone|where (is|does) he|city|based|magdeburg)\b/i,answer:"Pradyumna is based in Magdeburg, Germany."},
+ {keys:/\b(available|availability|notice period|start date|salary|compensation|rate|remote|hybrid|relocat|visa|work permit|citizenship)\b/i,answer:"Those details can change and are not verified by the portfolio. Please email Pradyumna directly to discuss current availability, work arrangements or compensation.",contact:true},
+ {keys:/\b(schedule|meeting|appointment|calendar|book a call)\b/i,answer:"I can’t schedule meetings directly. Please email Pradyumna with your preferred date, time and reason for reaching out.",contact:true}
+];
 function answerQuestion(q,previousTopic=''){
  const text=q.trim().toLowerCase();
  if(/^(hi|hello|hey|good (morning|afternoon|evening)|namaste|hello there)[!. ]*$/.test(text))
@@ -56,7 +77,7 @@ function answerQuestion(q,previousTopic=''){
    return {answer:"You’re welcome! Is there anything else you’d like to know about Pradyumna’s work?"};
  if(/^(bye|goodbye|see you)[!. ]*$/.test(text))
    return {answer:"Thanks for visiting! If you'd like to discuss an opportunity, please email Pradyumna at pradyumnavissapragada@gmail.com.",contact:true};
- if(/(email|contact|reach|hire|interview|opportunity|connect|message)/.test(text))
+ if(/\b(email|contact|reach|hire|interview|opportunity|connect|message)\b/.test(text))
    return {answer:"You can reach Pradyumna at pradyumnavissapragada@gmail.com. Feel free to email him about roles, interviews or collaborations.",contact:true};
  let query=q;
  if(/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/.test(text)&&previousTopic)
@@ -65,6 +86,7 @@ function answerQuestion(q,previousTopic=''){
  if(employer)return {answer:employer.company+' | '+employer.role+' | '+employer.dates+'\n'+employer.points.join('\n')};
  if(/mentor|coach|operational efficiency|workshop/i.test(query))
    return {answer:"Pradyumna has mentored engineers, led technical workshops and promoted shared quality ownership across teams. He brings hands-on automation experience together with QA and release leadership."};
+ const faq=commonFAQs.find(k=>k.keys.test(query));if(faq)return faq;
  const matched=knowledge.find(k=>k.keys.test(query.toLowerCase()));
  return matched||{answer:"I don't have a reliable answer to that question. Please email Pradyumna at pradyumnavissapragada@gmail.com and he'll be able to help directly.",contact:true};
 }
