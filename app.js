@@ -102,7 +102,7 @@ function answerQuestion(q,previousTopic=''){
    return {answer:"You’re welcome! Is there anything else you’d like to know about Pradyumna’s work?"};
  if(/^(bye|goodbye|see you)[!. ]*$/.test(text))
    return {answer:"Thanks for visiting! If you'd like to discuss an opportunity, please email Pradyumna at pradyumnavissapragada@gmail.com.",contact:true};
- if(/\b(email|contact|reach|hire|interview|opportunity|connect|message)\b/.test(text))
+ if(/\b(email|contact|reach|interview|opportunity|connect|message)\b/.test(text)&&!/\b(why|should|strengths|choose|value)\b/.test(text))
    return {answer:"You can reach Pradyumna at pradyumnavissapragada@gmail.com. Feel free to email him about roles, interviews or collaborations.",contact:true};
  let query=q;
  if(/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/.test(text)&&previousTopic)
