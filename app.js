@@ -217,6 +217,12 @@ function localRecruiterAnswer(q){
  if(/\b(awards|recognition|the savior|fast & furious)\b/.test(t))return answer("awards");
  if(/\b(test strategy|regression|test coverage|quality assurance|testing approach|test plan|risk.based testing|exit criteria|entry criteria|defect management)\b/.test(t)&&!/\b(release readiness|go.no.go)\b/.test(t))return answer("testing");
  if(/\b(senior automation engineer|automation lead|qa lead role|release lead role|suitable for|fit for.*position)\b/.test(t))return answer("rolefit");
+ if(/\b(latest position|last position|most recent position|last job|latest job)\b/.test(t))return {answer:"The latest position shown in the portfolio is Release Lead & Senior Automation Engineer at LivePerson GmbH. The published timeline has not yet confirmed his final employment end date."};
+ if(/\b(google|microsoft|amazon|meta|apple|ibm|tcs|infosys|wipro)\b/.test(t)&&/\b(work|employ|job|role|company|experience)\b/.test(t))return {answer:"The published career history lists LivePerson, Synechron, Nisum and Accenture. It does not establish employment at the other company mentioned. Please contact Pradyumna to confirm any unlisted experience.",contact:true};
+ if(/\b(salary|compensation|notice|joining|available|availability|citizen|citizenship|visa|work permit|home address|street address|personal address)\b/.test(t))return answer("unknown",true);
+ if(/\b(managed? (a |the )?(qa |test |automation )?team|manage a qa team|led (a |the )?team|team size|how many engineers)\b/.test(t))return answer("leadership");
+ if(/\b(90 percent|90%|120 hours|200k|\\$200|70 percent|70%)\b/.test(t)||/\b(90%|70%|\\$200k)\b/.test(t))return answer("achievements");
+ if(/\b(java|javascript|node.js|selenium|cucumber|junit|testng|rest assured)\b/.test(t)&&/\b(know|skill|experience|used|expertise|proficient|work|familiar)\b/.test(t))return answer("skills");
  if(/\b(current role|latest role|most recent role|job title|current position)\b/.test(t))return {answer:"The latest role shown in the published portfolio is Release Lead & Senior Automation Engineer at LivePerson GmbH. The career timeline has not been updated to confirm his current employment status."};
 
  if(/\b(liveperson|live person)\b/.test(t))return answer("liveperson");
