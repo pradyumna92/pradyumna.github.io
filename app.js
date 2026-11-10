@@ -250,32 +250,32 @@ function localRecruiterAnswer(q){
  if(/\b(who is|tell me about|professional profile|summary|career|experience|background|worked|role|position|skills|knowledge|qualifications|expertise|employer|company|companies|team|leadership|automation|testing|framework|project|achievement|impact|performance|release|qa|sdet|playwright|typescript|java|javascript|selenium|appium|api|ci\/cd|gitlab|jenkins|browserstack|postman|cucumber|junit|testng)\b/.test(t))return {answer:"I cannot verify that specific detail from the information published in this portfolio. I can describe Pradyumna's documented employers, skills, career highlights and release leadership, or you can contact him for clarification.",contact:true};
  return null;
 }
+// Hybrid routing: static facts and greetings stay instant; analytical and contextual prompts use AI.
+const chatHistory=[];
+const analytical=/\\b(design|create|propose|architect|hypothetical|imagine|scenario|roadmap|how would|recommend|develop a plan|build a framework|evaluate|compare|analy[sz]e|strategy|suggest|improve|what if|trade.off|30.60.90|job description|job posting|requirements|based on|given that|in that case|why|how should)\\b/i;
+const followup=/^(tell me more|more details|can you elaborate|explain more|what about that|and that|why|how|what next|can you expand|give an example|what are the risks|and for api testing)[?.! ]*$/i;
+function shouldUseAI(q){return analytical.test(q)|| (chatHistory.length>0 && followup.test(q.trim())) || q.length>300;}
 async function ask(q){
  q=q.trim().slice(0,500);if(!q||chatBusy)return;
  message(q,'user');$('#question').value='';$('#send-question').disabled=true;
- let a;
+ chatBusy=true;let a;
  try{
-  a=localRecruiterAnswer(q);
-  if(!a){
-   const needsAI=/\b(design|create|propose|architect|hypothetical|imagine|scenario|roadmap|how would|recommend|develop a plan|build a framework|evaluate this release|compare these approaches)\b/i.test(q);
-   if(!needsAI){a={answer:'That detail is not confirmed in the published portfolio. Please contact Pradyumna for a verified answer.',contact:true};}
-   else {
-   if(!config.apiBase)throw Error('AI endpoint not configured');
-   chatBusy=true;
-   const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');
+  const local=localRecruiterAnswer(q);
+  if(local&&!shouldUseAI(q)){a=local;}
+  else if(config.apiBase){
+   const data=await api('/chat',{messages:[...chatHistory,{role:'user',content:q}].slice(-8)},'chat');
    if(typeof data.answer!=='string'||!data.answer.trim())throw Error('Empty AI response');
    a={answer:data.answer,contact:!!data.handoff};
-   history.push({role:'user',content:q},{role:'assistant',content:a.answer});
-   }
-  }
+  }else a=local||{answer:'AI is not configured. Please contact Pradyumna for further details.',contact:true};
  }catch(err){
   console.warn('P-Bot AI request failed:',err);
-  a={answer:'AI is currently unavailable. Please try again after some time.'};
+  a=localRecruiterAnswer(q)||{answer:'AI is temporarily unavailable. Please contact Pradyumna for more details.',contact:true};
  }finally{
-  chatBusy=false;
-  $('#send-question').disabled=!$('#question').value.trim();
+  chatBusy=false;$('#send-question').disabled=!$('#question').value.trim();
  }
- if(!/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
+ chatHistory.push({role:'user',content:q},{role:'assistant',content:a.answer});
+ if(chatHistory.length>8)chatHistory.splice(0,chatHistory.length-8);
+ if(!followup.test(q))lastKnownTopic=q;
  message(a.answer,'assistant',a.contact);
  if(readAnswers&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(a.answer))}
 }
