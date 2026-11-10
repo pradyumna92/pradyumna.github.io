@@ -32,10 +32,10 @@ export default async function handler(req,res){
  }
  try{
   const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4.1-mini',temperature:0.35,max_tokens:450,messages:[{role:'system',content:system},...messages]})});
-  if(!r.ok)return res.status(502).json({error:'AI provider unavailable'});
+  if(!r.ok){const detail=await r.text();console.error('OpenAI request failed',r.status,detail.slice(0,500));return res.status(502).json({error:'AI provider error ('+r.status+'). Check OpenAI API billing, key permissions and model access.'});}
   const data=await r.json();
   const answer=data.choices?.[0]?.message?.content;
   if(typeof answer!=='string'||!answer.trim())return res.status(502).json({error:'Empty response'});
   return res.status(200).json({answer:answer.slice(0,2500),handoff:/email Pradyumna|contact Pradyumna/i.test(answer)});
- }catch{return res.status(502).json({error:'AI service unavailable'})}
+ }catch(err){console.error('AI request exception',err?.message||err);return res.status(502).json({error:'AI service unavailable'})}
 }
