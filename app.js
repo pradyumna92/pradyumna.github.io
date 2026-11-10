@@ -76,7 +76,8 @@ message('Hi, I’m Pradyumna’s portfolio guide. Ask about his career, technica
 let chatBusy=false;const history=[];let lastKnownTopic="";
 async function ask(q){q=q.trim().slice(0,500);if(!q||chatBusy)return;message(q,'user');$('#question').value='';$('#send-question').disabled=true;let a;
 if(config.apiBase&&config.turnstileSiteKey){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch{a=answerQuestion(q,lastKnownTopic)}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
-else a=answerQuestion(q,lastKnownTopic);\nif(!a.contact&& !/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
+else a=answerQuestion(q,lastKnownTopic);
+if(!a.contact&& !/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
 message(a.answer,'assistant',a.contact);if(readAnswers&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(a.answer))}}
 $('#question').oninput=()=>$('#send-question').disabled=!$('#question').value.trim();$('#chat-form').onsubmit=e=>{e.preventDefault();ask($('#question').value)};$$('[data-question]').forEach(b=>b.onclick=()=>ask(b.dataset.question));
 $('#speak').onclick=()=>{if(!('speechSynthesis'in window)){$('#voice-status').textContent='Audio playback isn’t supported here. Please read the text answers.';return}readAnswers=!readAnswers;$('#speak').textContent='Read answers: '+(readAnswers?'on':'off');$('#speak').setAttribute('aria-pressed',String(readAnswers));if(!readAnswers)speechSynthesis.cancel()};
