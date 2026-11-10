@@ -172,6 +172,8 @@ function localRecruiterAnswer(q){
  if(/^(match this job description)$/.test(t))return answer("job");
  if(/^(how can i schedule an interview)$/.test(t))return answer("interview",true);
  if(/^(what is happening around the world|world news|latest news|what's happening in the world)$/.test(t))return answer("news");
+ if(/\b(current role|latest role|most recent role|job title|current position)\b/.test(t))return {answer:"The latest role shown in the published portfolio is Release Lead & Senior Automation Engineer at LivePerson GmbH. The career timeline has not been updated to confirm his current employment status."};
+ if(/\b(playwright|typescript)\b/.test(t)&&/\b(experience|worked|used|professional|production|hands.on)\b/.test(t))return {answer:"The portfolio includes an illustrative Playwright + TypeScript framework showcase. It does not verify that Pradyumna delivered a Playwright framework professionally. His documented hands-on automation background includes Selenium, Java, Appium and API testing."};
  if(/\b(liveperson|live person)\b/.test(t))return answer("liveperson");
  if(/\bsynechron\b/.test(t))return answer("synechron");
  if(/\bnisum\b/.test(t))return answer("nisum");
