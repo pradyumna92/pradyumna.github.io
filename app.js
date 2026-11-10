@@ -153,7 +153,16 @@ const recruiterFacts={
  education:"Education and professional certifications are not verified in the current portfolio. Please contact Pradyumna for the latest details.",
  location:"The published portfolio lists Pradyumna as based in Magdeburg, Germany.",
  cv:"The portfolio summarizes Pradyumna's experience, but P-Bot cannot guarantee that a downloadable CV is available. Request the latest resume by emailing pradyumnavissapragada@gmail.com.",
- skills:"His documented toolkit includes Java, JavaScript/Node.js, Selenium WebDriver, Appium, Cucumber, JUnit, TestNG, Postman, REST Assured, GitLab CI/CD, Jenkins and BrowserStack. Playwright/TypeScript is featured as an illustrative portfolio framework.",
+ skills:"Pradyumna's documented hands-on toolkit includes Java, JavaScript/Node.js, Selenium WebDriver, Appium, Cucumber, JUnit, TestNG, Postman, REST Assured, GitLab CI/CD, Jenkins and BrowserStack. His portfolio also showcases a Playwright + TypeScript hybrid UI/API framework design. MCP (Model Context Protocol) is relevant to AI-assisted testing and tool integrations, but professional MCP implementation experience is not verified in the published resume. The Playwright showcase is illustrative rather than evidence of production delivery.",
+ playwright:"Playwright and TypeScript appear in Pradyumna's portfolio as an illustrative hybrid UI/API automation framework design, with page objects, API clients, fixtures and CI gates. The published resume does not establish years of professional Playwright production experience. His documented automation background is strongest in Java/Selenium, Appium and API testing.",
+ mcp:"MCP means Model Context Protocol, a standard for connecting AI assistants to tools and external context. In QA automation, an MCP server can expose approved tools for test discovery, execution or results. It is a relevant emerging technology, but Pradyumna's published resume does not verify professional MCP implementation or deployment. Do not treat this as a claimed past project.",
+ cicd:"The portfolio documents Jenkins and GitLab CI/CD, plus BrowserStack for automation execution. These tools support repeatable automated checks and release feedback; specific pipeline architecture beyond the published portfolio is not independently verified.",
+ api:"The published portfolio documents API validation with Postman and REST Assured, alongside wider web and mobile testing. It does not specify every endpoint, protocol or performance benchmark.",
+ mobile:"The portfolio documents Android/iOS mobile automation experience with Appium and BrowserStack. Specific device coverage and release metrics should be confirmed directly.",
+ leadership:"The portfolio describes QA and release leadership, risk-based prioritization, mentoring and cross-functional collaboration. At LivePerson it reports coordination of a four-engineer QA unit; at Nisum it reports leading three automation engineers.",
+ testing:"His testing background spans UI, API and mobile automation, regression planning, quality strategy and release readiness. The portfolio emphasizes critical-path coverage, defect assessment, agreed exit criteria and accepted residual risk rather than a universal pass-rate rule.",
+ awards:"His published resume mentions the recognition awards 'The Savior' and 'Fast & Furious'. Award criteria and dates are not independently verified.",
+ rolefit:"For Senior Automation Engineer, Automation Lead and QA/Release Lead positions, Pradyumna's published strengths include Java/Selenium, API and mobile automation, mentoring, quality strategy and release coordination. Role-specific fit depends on the actual job requirements; Playwright/MCP production experience should not be assumed.",
  contact:"You can contact Pradyumna at pradyumnavissapragada@gmail.com or +49 152 38763124 to discuss interviews and opportunities.",
  interview:"To schedule an interview, please email Pradyumna at pradyumnavissapragada@gmail.com. P-Bot cannot book a meeting or send an invitation.",
  unknown:"That information is not verified in the published portfolio. Please ask Pradyumna directly at pradyumnavissapragada@gmail.com.",
@@ -197,8 +206,19 @@ function localRecruiterAnswer(q){
  if(/^(match this job description)$/.test(t))return answer("job");
  if(/^(how can i schedule an interview)$/.test(t))return answer("interview",true);
  if(/^(what is happening around the world|world news|latest news|what's happening in the world)$/.test(t))return answer("news");
+ if(/\b(why (should|would) (we|i|an employer|a company) hire|why hire|why choose|what makes .* (stand out|a good candidate|a strong candidate|a suitable candidate)|what are (his|pradyumna's) strengths)\b/.test(t))return answer("hire");
+ if(/\b(mcp|model context protocol|mcp server|mcp integration)\b/.test(t)&&!/\b(technical skills|tech stack|technologies|all skills|overall skills|expertise|toolkit)\b/.test(t))return answer("mcp");
+ if(/\b(playwright|typescript|type script)\b/.test(t)&&!/\b(technical skills|tech stack|technologies|all skills|overall skills|expertise|toolkit)\b/.test(t))return answer("playwright");
+ if(/\b(technical skills|tech stack|technologies|tools|programming languages|what skills|his skills|pradyumna's skills|technical expertise|technical background|toolkit|automation tools|automation technologies)\b/.test(t))return answer("skills");
+ if(/\b(leadership|team management|mentoring|mentor|manage a team|led a team|qa lead|release lead|stakeholder|cross.functional)\b/.test(t)&&!/\b(why hire|why should)\b/.test(t))return answer("leadership");
+ if(/\b(ci.cd|pipeline|jenkins|gitlab|devops|continuous integration)\b/.test(t))return answer("cicd");
+ if(/\b(api|postman|rest assured|rest api|service testing|backend testing)\b/.test(t)&&!/\b(automation framework|hybrid framework)\b/.test(t))return answer("api");
+ if(/\b(mobile|android|ios|appium|browserstack|device testing)\b/.test(t))return answer("mobile");
+ if(/\b(awards|recognition|the savior|fast & furious)\b/.test(t))return answer("awards");
+ if(/\b(test strategy|regression|test coverage|quality assurance|testing approach|test plan|risk.based testing|exit criteria|entry criteria|defect management)\b/.test(t)&&!/\b(release readiness|go.no.go)\b/.test(t))return answer("testing");
+ if(/\b(senior automation engineer|automation lead|qa lead role|release lead role|suitable for|fit for.*position)\b/.test(t))return answer("rolefit");
  if(/\b(current role|latest role|most recent role|job title|current position)\b/.test(t))return {answer:"The latest role shown in the published portfolio is Release Lead & Senior Automation Engineer at LivePerson GmbH. The career timeline has not been updated to confirm his current employment status."};
- if(/\b(playwright|typescript)\b/.test(t)&&/\b(experience|worked|used|professional|production|hands.on)\b/.test(t))return {answer:"The portfolio includes an illustrative Playwright + TypeScript framework showcase. It does not verify that Pradyumna delivered a Playwright framework professionally. His documented hands-on automation background includes Selenium, Java, Appium and API testing."};
+
  if(/\b(liveperson|live person)\b/.test(t))return answer("liveperson");
  if(/\bsynechron\b/.test(t))return answer("synechron");
  if(/\bnisum\b/.test(t))return answer("nisum");
