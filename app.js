@@ -161,7 +161,32 @@ const recruiterFacts={
  job:"Paste the job description, and I can compare its requirements against Pradyumna's documented skills and identify unverified qualifications. A detailed AI-powered comparison requires the AI service to be available.",
  framework:"The portfolio illustrates a hybrid Playwright/TypeScript framework with UI page objects, API clients, reusable fixtures, test data, assertions, reporting and CI/CD quality gates. It is an architectural demonstration, not evidence of professional Playwright delivery."
 };
+function smallTalkAnswer(q){
+ const t=q.toLowerCase().trim().replace(/[!?.,]+$/g,'').replace(/\s+/g,' ');
+ const say=answer=>({answer});
+ if(/^(hi|hii+|hello|hello there|hey|hey there|hiya|namaste|good morning|good afternoon|good evening|greetings|yo)$/.test(t))return say("Hello! 👋 Welcome to Pradyumna's portfolio. I'm P-Bot, his virtual recruiter guide. How can I help you today?");
+ if(/^(how are you|how r u|how are you doing|how do you do|how's it going|hows it going|how are things|you good)$/.test(t))return say("I'm doing well, thanks for asking! 😊 I'm here to help you explore Pradyumna's experience, skills and achievements. How are you?");
+ if(/^(how's your day|hows your day|how is your day|how was your day|how's your day going|hows your day going|how is your day going|howz your day|howz your day going)$/.test(t))return say("It's going well, thanks for asking! I'm ready to help visitors learn about Pradyumna's work. How's your day?");
+ if(/^(what's up|whats up|wassup|sup|what are you doing|what are you up to|what's going on|whats going on)$/.test(t))return say("Just helping visitors explore this portfolio! 😄 Ask me about Pradyumna's career, automation, release leadership or achievements.");
+ if(/^(i'm (good|fine|great|okay|ok)|im (good|fine|great|okay|ok)|i am (good|fine|great|okay|ok)|doing (good|well|great)|not bad)$/.test(t))return say("Glad to hear that! 😊 What would you like to know about Pradyumna?");
+ if(/^(i'm (bad|tired|not good)|im (bad|tired|not good)|i am (bad|tired|not good)|not great)$/.test(t))return say("Sorry to hear that. I hope your day improves. I'm here if you'd like to chat about the portfolio.");
+ if(/^(what time is it|what's the time|whats the time|tell me the time|current time|time now|what is the time)$/.test(t)){const now=new Date();return say("According to your device, the local time is "+new Intl.DateTimeFormat(undefined,{hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(now)+".");}
+ if(/^(what's the date|whats the date|what is the date|today's date|todays date|what day is it|what is today's date|what is todays date)$/.test(t)){const now=new Date();return say("According to your device, today is "+new Intl.DateTimeFormat(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"}).format(now)+".");}
+ if(/^(where are you from|where do you come from|where are you based|where do you live|what is your location)$/.test(t))return say("I'm P-Bot, a virtual assistant on Pradyumna's portfolio, so I don't have a physical hometown. Pradyumna's published portfolio lists him as based in Magdeburg, Germany.");
+ if(/^(who are you|what are you|what is your name|what's your name|whats your name|are you a human|are you real|are you a bot)$/.test(t))return say("I'm P-Bot, Pradyumna's automated portfolio assistant—not Pradyumna himself. I can answer questions about his documented experience and help you find his contact details.");
+ if(/^(who made you|who created you|who built you)$/.test(t))return say("I'm the virtual assistant featured on Pradyumna's portfolio. My role is to help recruiters and visitors explore his published professional information.");
+ if(/^(what can you do|how can you help|can you help me|help|help me|what should i ask|show me options)$/.test(t))return say("You can ask about Pradyumna's career, employers, automation skills, release leadership, achievements, job suitability and contact details. I won't invent information missing from his portfolio.");
+ if(/^(thank you|thanks|thanks a lot|thank you so much|thx|ty|appreciate it|cheers)$/.test(t))return say("You're very welcome! 😊 Is there anything else you'd like to know?");
+ if(/^(bye|goodbye|see you|see you later|take care|good night|goodnight|talk later)$/.test(t))return say("Thanks for visiting! 👋 Have a great day. You can contact Pradyumna using the links in his portfolio.");
+ if(/^(nice to meet you|pleased to meet you|great to meet you)$/.test(t))return say("Nice to meet you too! 😊 What would you like to explore?");
+ if(/^(tell me a joke|say something funny|make me laugh)$/.test(t))return say("Why did the QA engineer cross the road? To verify the other side! 😄");
+ if(/^(are you available|are you online|are you there|can you hear me|hello anyone there)$/.test(t))return say("Yes, I'm here! Ask me anything about Pradyumna's published professional background.");
+ if(/^(do you speak german|can you speak german|sprichst du deutsch)$/.test(t))return say("Ja, ich kann einfache Fragen beantworten. Du kannst mich nach Pradyumnas Berufserfahrung und Fähigkeiten fragen.");
+ if(/^(do you speak telugu|can you speak telugu|telugu vastunda)$/.test(t))return say("అవును! మీరు ప్రద్యుమ్న కెరీర్, నైపుణ్యాలు మరియు అనుభవం గురించి అడగవచ్చు.");
+ return null;
+}
 function localRecruiterAnswer(q){
+ const smallTalk=smallTalkAnswer(q);if(smallTalk)return smallTalk;
  const t=q.toLowerCase().trim().replace(/[?.!]+$/,'');
  const answer=(key,contact=false)=>({answer:recruiterFacts[key],contact});
  if(/^(hi|hello|hey|namaste|good morning|good afternoon|good evening)$/.test(t))return {answer:"Hello! I'm P-Bot, Pradyumna's portfolio assistant. Ask me about his experience, skills, achievements, employers or release leadership."};
