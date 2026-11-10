@@ -251,6 +251,8 @@ function localRecruiterAnswer(q){
  return null;
 }
 // Hybrid routing: static facts and greetings stay instant; analytical and contextual prompts use AI.
+const PBOT_VERSION='v27';
+console.info('[P-Bot]',PBOT_VERSION,'loaded');
 const chatHistory=[];
 const analytical=/\b(design|create|propose|architect|hypothetical|imagine|scenario|roadmap|how would|recommend|develop a plan|build a framework|evaluate|compare|analy[sz]e|strategy|suggest|improve|what if|trade.off|30.60.90|job description|job posting|requirements|based on|given that|in that case|why|how should|how can|how do|how to|best practices|flaky|optimi[sz]e|troubleshoot|debug|reduce|prevent|handle)\b/i;
 const followup=/^(tell me more|more details|can you elaborate|explain more|what about that|and that|why|how|what next|can you expand|give an example|what are the risks|and for api testing)[?.! ]*$/i;
@@ -261,14 +263,17 @@ async function ask(q){
  chatBusy=true;let a;
  try{
   const local=localRecruiterAnswer(q);
-  if(local&&!shouldUseAI(q)){a=local;}
+  const useAI=shouldUseAI(q);
+  console.info('[P-Bot]',PBOT_VERSION,'route:',useAI?'AI':'STATIC','question:',q);
+  if(local&&!useAI){a=local;}
   else if(config.apiBase){
    const data=await api('/chat',{messages:[...chatHistory,{role:'user',content:q}].slice(-8)},'chat');
    if(typeof data.answer!=='string'||!data.answer.trim())throw Error('Empty AI response');
+   console.info('[P-Bot]',PBOT_VERSION,'AI response received',data.answer.length,'characters');
    a={answer:data.answer,contact:!!data.handoff};
   }else a=local||{answer:'AI is not configured. Please contact Pradyumna for further details.',contact:true};
  }catch(err){
-  console.warn('P-Bot AI request failed:',err);
+  console.warn('[P-Bot]',PBOT_VERSION,'AI request failed:',err);
   a=shouldUseAI(q)?{answer:'I could not complete the technical analysis right now. Please try again shortly.',contact:false}:(localRecruiterAnswer(q)||{answer:'AI is temporarily unavailable. Please contact Pradyumna for more details.',contact:true});
  }finally{
   chatBusy=false;$('#send-question').disabled=!$('#question').value.trim();
