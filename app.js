@@ -165,7 +165,7 @@ function localRecruiterAnswer(q){
  if(/^(match this job description)$/.test(t))return answer("job");
  if(/^(how can i schedule an interview)$/.test(t))return answer("interview",true);
  if(/^(what is happening around the world|world news|latest news|what's happening in the world)$/.test(t))return answer("news");
- if(/\b(why (should|would) (we|i|an employer|a company) hire|why hire|why choose|what makes .* (stand out|a good candidate)|what are (his|pradyumna's) strengths)\b/.test(t))return answer("hire");
+ if(/\b(why (should|would) (we|i|an employer|a company) hire|why hire|why choose|what makes .* (stand out|a good candidate|a strong candidate|a suitable candidate)|what are (his|pradyumna's) strengths)\b/.test(t))return answer("hire");
  if(/\b(expected salary|salary expectation|notice period|earliest joining|joining date|availability|work authorization|visa status|citizenship|personal address)\b/.test(t))return answer("unknown",true);
  if(/\b(cypress|python|robot framework|five years of playwright|professional playwright|playwright in production|aws certification|istqb certified)\b/.test(t)&&/\b(has|does|did|experience|worked|certified|used|how long)\b/.test(t))return answer("unknown",true);
  if(/\b(world news|latest news|current headlines|happening around the world)\b/.test(t))return answer("news");
@@ -175,6 +175,7 @@ function localRecruiterAnswer(q){
  if(/\b(how many years|years of experience|career summary|professional background|career history|tell me about his career)\b/.test(t))return answer("career");
  if(/\b(release readiness|release leadership|release lead|release management|go.no.go|quality governance)\b/.test(t)&&!/\b(design|propose|recommend|scenario|hypothetical|imagine|suppose|what if|should we release|given a release)\b/.test(t))return answer("release");
  if(/\b(automation framework|hybrid framework|playwright framework)\b/.test(t)&&/\b(explain|showcase|portfolio|featured|example)\b/.test(t))return answer("framework");
+ if(/\b(job description|job posting|role requirements|job requirements|compare.*(job|role)|match.*(job|role)|fit for (this|the) role|candidate for (this|the) role)\b/.test(t))return null;
  if(/\b(automation experience|selenium|appium|browserstack|api testing|mobile testing|test automation)\b/.test(t)&&!/\b(design|create|propose|recommend|architect|roadmap|how would|scenario|strategy for)\b/.test(t))return answer("automation");
  if(/\b(technical skills|tech stack|technologies|tools|programming languages|what skills|his skills|pradyumna's skills)\b/.test(t))return answer("skills");
  if(/\b(what can you do|who are you|are you a bot)\b/.test(t))return {answer:"I'm P-Bot, an automated portfolio guide. I can explain verified career information and help with recruiter questions. Technical scenario analysis uses an AI service when available."};
