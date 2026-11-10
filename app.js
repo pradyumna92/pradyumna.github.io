@@ -254,7 +254,7 @@ function localRecruiterAnswer(q){
 const chatHistory=[];
 const analytical=/\b(design|create|propose|architect|hypothetical|imagine|scenario|roadmap|how would|recommend|develop a plan|build a framework|evaluate|compare|analy[sz]e|strategy|suggest|improve|what if|trade.off|30.60.90|job description|job posting|requirements|based on|given that|in that case|why|how should|how can|how do|how to|best practices|flaky|optimi[sz]e|troubleshoot|debug|reduce|prevent|handle)\b/i;
 const followup=/^(tell me more|more details|can you elaborate|explain more|what about that|and that|why|how|what next|can you expand|give an example|what are the risks|and for api testing)[?.! ]*$/i;
-function shouldUseAI(q){return analytical.test(q)|| (chatHistory.length>0 && followup.test(q.trim())) || q.length>300;}
+function shouldUseAI(q){const t=q.toLowerCase().trim().replace(/[?.!]+$/,'');if(['how do you assess release readiness','how can i schedule an interview','match this job description'].includes(t))return false;return analytical.test(q)|| (chatHistory.length>0 && followup.test(q.trim())) || q.length>300;}
 async function ask(q){
  q=q.trim().slice(0,500);if(!q||chatBusy)return;
  message(q,'user');$('#question').value='';$('#send-question').disabled=true;
