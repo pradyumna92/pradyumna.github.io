@@ -139,9 +139,9 @@ $$('[data-chat]').forEach(b=>b.onclick=()=>openChat(b));$('#chat-launch').onclic
 message('Hi, I’m Pradyumna’s portfolio guide. Ask about his career, technical skills or impact. I can also help you contact him directly.','assistant');
 let chatBusy=false;const history=[];let lastKnownTopic="";
 async function ask(q){q=q.trim().slice(0,500);if(!q||chatBusy)return;message(q,'user');$('#question').value='';$('#send-question').disabled=true;let a;
-const casual=casualAnswer(q,lastKnownTopic);
+const casual=!config.apiBase?casualAnswer(q,lastKnownTopic):null;
 if(casual){a=casual}
-else if(config.apiBase){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch{a=answerQuestion(q,lastKnownTopic)}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
+else if(config.apiBase){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch(err){console.warn('P-Bot AI request failed:',err);a={answer:'P-Bot could not reach the AI service right now ('+(err?.message||'request failed')+'). Please try again shortly. This is a service error, not an AI-generated answer.'}}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
 else a=answerQuestion(q,lastKnownTopic);
 if(!a.contact&&!casual&& !/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
 message(a.answer,'assistant',a.contact);if(readAnswers&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(a.answer))}}
