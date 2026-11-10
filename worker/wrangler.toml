@@ -1,0 +1,7 @@
+name = "portfolio-recruiter-assistant"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://pradyumnavissapragada.github.io"
+OPENAI_MODEL = "gpt-4.1-mini"
