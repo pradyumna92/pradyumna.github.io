@@ -139,23 +139,73 @@ function openChat(trigger){lastTrigger=trigger;$('#chat-panel').hidden=false;$('
 $$('[data-chat]').forEach(b=>b.onclick=()=>openChat(b));$('#chat-launch').onclick=()=>$('#chat-panel').hidden?openChat($('#chat-launch')):closeChat();$('#close-chat').onclick=closeChat;$('#chat-panel').onkeydown=e=>{if(e.key==='Escape')closeChat()};
 message('Hi, I’m Pradyumna’s portfolio guide. Ask about his career, technical skills or impact. I can also help you contact him directly.','assistant');
 let chatBusy=false;const history=[];let lastKnownTopic="";
-async function ask(q){q=q.trim().slice(0,500);if(!q||chatBusy)return;message(q,'user');$('#question').value='';$('#send-question').disabled=true;let a;
-const presetAnswers={
- 'give me a career summary':()=>({answer:'Pradyumna is a software quality engineering professional with over 11 years of experience across test automation and release leadership. His portfolio lists LivePerson, Synechron, Nisum and Accenture, with experience in UI, API and mobile testing, CI/CD and quality governance.'}),
- 'explain the hybrid automation framework':()=>({answer:'The portfolio showcases a hybrid UI + API automation approach using reusable test components, page objects, API clients, fixtures, test data, reporting and CI/CD execution. Its Playwright/TypeScript example is an illustrative architecture, not a verified claim of production delivery.'}),
- 'how do you assess release readiness?':()=>({answer:'A release-readiness review checks agreed objectives and exit criteria, critical-path coverage, regression results, severity and impact of open defects, environment stability and residual risk. A GO decision needs documented evidence and accountable stakeholder acceptance; ISTQB does not prescribe a universal pass-rate threshold.'}),
- 'match this job description':()=>({answer:'Please paste the job description. I can compare its requirements against verified portfolio experience, distinguish supported qualifications from unverified ones, and highlight gaps. For an AI-generated detailed comparison, the AI service must be available.'}),
- 'how can i schedule an interview?':()=>({answer:'To arrange an interview, contact Pradyumna directly at pradyumnavissapragada@gmail.com. P-Bot cannot schedule interviews or send invitations on your behalf.',contact:true}),
- 'what is happening around the world?':()=>({answer:'P-Bot does not have a verified live news feed, so I cannot reliably report current world headlines. For current news, please consult a reputable news source. I can answer questions about Pradyumna’s portfolio without live news access.'})
+const recruiterFacts={
+ career:"Pradyumna is a QA/SDET and release-leadership professional with over 11 years of experience. His portfolio lists LivePerson, Synechron, Nisum and Accenture. His work spans UI, API and mobile automation, CI/CD, quality strategy and release coordination.",
+ hire:"Pradyumna combines hands-on automation engineering with QA and release leadership. His documented skills include Selenium, Java, Appium, API testing, GitLab CI/CD and BrowserStack, alongside mentoring, release planning and risk-based quality decisions. This makes him worth considering for senior automation and QA leadership roles; final fit depends on your team's requirements.",
+ automation:"Pradyumna's portfolio documents web automation with Selenium and Java, mobile testing with Appium and BrowserStack, and API testing with Postman and REST Assured. The Playwright/TypeScript hybrid framework shown here is an illustrative design, not verified production experience.",
+ release:"Pradyumna's portfolio describes release coordination, QA strategy, quality governance and risk-based testing. Release readiness should be assessed against agreed objectives, critical-path coverage, executed and remaining tests, defect severity, non-functional criteria and formally accepted residual risks. ISTQB does not mandate a universal pass percentage.",
+ achievements:"The portfolio reports 90% of manual test suites transitioned to automation and $200K in annual savings, 70% shorter test execution, and 120 hours of manual effort saved monthly in an Accenture initiative. These are resume-reported outcomes, not independently audited results.",
+ employers:"Pradyumna's portfolio lists LivePerson GmbH, Synechron Technologies, Nisum Technologies and Accenture.",
+ skills:"His documented toolkit includes Java, JavaScript/Node.js, Selenium WebDriver, Appium, Cucumber, JUnit, TestNG, Postman, REST Assured, GitLab CI/CD, Jenkins and BrowserStack. Playwright/TypeScript is featured as an illustrative portfolio framework.",
+ contact:"You can contact Pradyumna at pradyumnavissapragada@gmail.com or +49 152 38763124 to discuss interviews and opportunities.",
+ interview:"To schedule an interview, please email Pradyumna at pradyumnavissapragada@gmail.com. P-Bot cannot book a meeting or send an invitation.",
+ unknown:"That information is not verified in the published portfolio. Please ask Pradyumna directly at pradyumnavissapragada@gmail.com.",
+ news:"P-Bot does not have access to a verified live news feed, so it cannot provide current world headlines. For up-to-date news, please use a reputable news service.",
+ job:"Paste the job description, and I can compare its requirements against Pradyumna's documented skills and identify unverified qualifications. A detailed AI-powered comparison requires the AI service to be available.",
+ framework:"The portfolio illustrates a hybrid Playwright/TypeScript framework with UI page objects, API clients, reusable fixtures, test data, assertions, reporting and CI/CD quality gates. It is an architectural demonstration, not evidence of professional Playwright delivery."
 };
-const preset=presetAnswers[q.toLowerCase().replace(/[?.!]+$/,'').trim()];
-const staticQuestion=/\b(why (should (we|i|a company|an employer) hire|hire|choose)|what (makes|sets) pradyumna (stand out|apart)|why is pradyumna (a good|the right) (fit|candidate))\b/i.test(q)||/^(hi|hello|hey|good (morning|afternoon|evening)|namaste|thanks|thank you|bye|goodbye)[!. ]*$/i.test(q)||/\b(contact|email address|phone number|reach pradyumna|linkedin|github|where did|worked at|employers|companies|years of experience|experience|skills|tech stack|technologies|certifications|education|resume|cv|background|projects|selenium|appium|browserstack|java|postman|gitlab|release leadership|qa lead|automation experience)\b/i.test(q)&&!/\b(imagine|hypothetical|scenario|design|create|propose|plan|strategy for|how would|should he|evaluate|compare|recommend|architect|transform|90.day|roadmap|fintech|5000|5,000)\b/i.test(q);
-if(preset){a=preset()}
-else if(staticQuestion){a=answerQuestion(q,lastKnownTopic)}
-else if(config.apiBase){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');if(typeof data.answer!=='string'||!data.answer.trim())throw Error('Empty AI response');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch(err){console.warn('P-Bot AI request failed:',err);a={answer:'AI is currently unavailable. Please try again after some time.'}}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
-else a={answer:'AI is currently unavailable. Please try again after some time.'};
-if(!a.contact&& !/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
-message(a.answer,'assistant',a.contact);if(readAnswers&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(a.answer))}}
+function localRecruiterAnswer(q){
+ const t=q.toLowerCase().trim().replace(/[?.!]+$/,'');
+ const answer=(key,contact=false)=>({answer:recruiterFacts[key],contact});
+ if(/^(hi|hello|hey|namaste|good morning|good afternoon|good evening)$/.test(t))return {answer:"Hello! I'm P-Bot, Pradyumna's portfolio assistant. Ask me about his experience, skills, achievements, employers or release leadership."};
+ if(/^(thanks|thank you|bye|goodbye)$/.test(t))return {answer:"Thanks for visiting! You can contact Pradyumna through the email link on this portfolio."};
+ if(/^(give me a career summary|tell me about pradyumna|who is pradyumna|who is pradyumna vissapragada)$/.test(t))return answer("career");
+ if(/^(explain the hybrid automation framework)$/.test(t))return answer("framework");
+ if(/^(how do you assess release readiness)$/.test(t))return answer("release");
+ if(/^(match this job description)$/.test(t))return answer("job");
+ if(/^(how can i schedule an interview)$/.test(t))return answer("interview",true);
+ if(/^(what is happening around the world|world news|latest news|what's happening in the world)$/.test(t))return answer("news");
+ if(/\b(why (should|would) (we|i|an employer|a company) hire|why hire|why choose|what makes .* (stand out|a good candidate)|what are (his|pradyumna's) strengths)\b/.test(t))return answer("hire");
+ if(/\b(expected salary|salary expectation|notice period|earliest joining|joining date|availability|work authorization|visa status|citizenship|personal address)\b/.test(t))return answer("unknown",true);
+ if(/\b(cypress|python|robot framework|five years of playwright|professional playwright|playwright in production|aws certification|istqb certified)\b/.test(t)&&/\b(has|does|did|experience|worked|certified|used|how long)\b/.test(t))return answer("unknown",true);
+ if(/\b(world news|latest news|current headlines|happening around the world)\b/.test(t))return answer("news");
+ if(/\b(how (can|do) (i|we) (contact|reach)|email|phone number|contact details|linkedin|schedule an interview|book an interview)\b/.test(t))return answer("contact",true);
+ if(/\b(achievements|accomplishments|impact|cost savings|results|metrics|success stories)\b/.test(t))return answer("achievements");
+ if(/\b(companies|employers|worked for|work history|where (has|did) .* work)\b/.test(t))return answer("employers");
+ if(/\b(how many years|years of experience|career summary|professional background|career history|tell me about his career)\b/.test(t))return answer("career");
+ if(/\b(release readiness|release leadership|release lead|release management|go.no.go|quality governance)\b/.test(t)&&!/\b(design|propose|recommend|scenario|hypothetical|imagine|suppose|what if|should we release|given a release)\b/.test(t))return answer("release");
+ if(/\b(automation framework|hybrid framework|playwright framework)\b/.test(t)&&/\b(explain|showcase|portfolio|featured|example)\b/.test(t))return answer("framework");
+ if(/\b(automation experience|selenium|appium|browserstack|api testing|mobile testing|test automation)\b/.test(t)&&!/\b(design|create|propose|recommend|architect|roadmap|how would|scenario|strategy for)\b/.test(t))return answer("automation");
+ if(/\b(technical skills|tech stack|technologies|tools|programming languages|what skills|his skills|pradyumna's skills)\b/.test(t))return answer("skills");
+ if(/\b(what can you do|who are you|are you a bot)\b/.test(t))return {answer:"I'm P-Bot, an automated portfolio guide. I can explain verified career information and help with recruiter questions. Technical scenario analysis uses an AI service when available."};
+ if(/^(tell me more|more details|can you elaborate|explain more|what about that|and that)$/.test(t)&&lastKnownTopic)return localRecruiterAnswer(lastKnownTopic);
+ return null;
+}
+async function ask(q){
+ q=q.trim().slice(0,500);if(!q||chatBusy)return;
+ message(q,'user');$('#question').value='';$('#send-question').disabled=true;
+ let a;
+ try{
+  a=localRecruiterAnswer(q);
+  if(!a){
+   if(!config.apiBase)throw Error('AI endpoint not configured');
+   chatBusy=true;
+   const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');
+   if(typeof data.answer!=='string'||!data.answer.trim())throw Error('Empty AI response');
+   a={answer:data.answer,contact:!!data.handoff};
+   history.push({role:'user',content:q},{role:'assistant',content:a.answer});
+  }
+ }catch(err){
+  console.warn('P-Bot AI request failed:',err);
+  a={answer:'AI is currently unavailable. Please try again after some time.'};
+ }finally{
+  chatBusy=false;
+  $('#send-question').disabled=!$('#question').value.trim();
+ }
+ if(!/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
+ message(a.answer,'assistant',a.contact);
+ if(readAnswers&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(a.answer))}
+}
 $('#question').oninput=()=>$('#send-question').disabled=!$('#question').value.trim();$('#chat-form').onsubmit=e=>{e.preventDefault();ask($('#question').value)};$$('[data-question]').forEach(b=>b.onclick=()=>ask(b.dataset.question));
 $('#speak').onclick=()=>{if(!('speechSynthesis'in window)){$('#voice-status').textContent='Audio playback isn’t supported here. Please read the text answers.';return}readAnswers=!readAnswers;$('#speak').textContent='Read answers: '+(readAnswers?'on':'off');$('#speak').setAttribute('aria-pressed',String(readAnswers));if(!readAnswers)speechSynthesis.cancel()};
 $('#mic').onclick=()=>{const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;if(!Speech){$('#voice-status').textContent='Voice input isn’t supported in this browser. Please type your question.';return}if(listening){recognizer?.stop();return}recognizer=new Speech();recognizer.lang='en-US';recognizer.interimResults=false;recognizer.onresult=e=>{$('#question').value=e.results[0][0].transcript.slice(0,500);$('#send-question').disabled=false;$('#voice-status').textContent='Review your question, then send.'};recognizer.onerror=()=>{$('#voice-status').textContent='Microphone unavailable or speech not recognized. You can still type.'};recognizer.onend=()=>{listening=false;$('#mic').textContent='Use microphone'};try{recognizer.start();listening=true;$('#mic').textContent='Stop microphone';$('#voice-status').textContent='Listening…'}catch{$('#voice-status').textContent='Voice input could not start. Please type instead.'}};
