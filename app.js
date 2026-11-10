@@ -252,7 +252,7 @@ function localRecruiterAnswer(q){
 }
 // Hybrid routing: static facts and greetings stay instant; analytical and contextual prompts use AI.
 const chatHistory=[];
-const analytical=/\\b(design|create|propose|architect|hypothetical|imagine|scenario|roadmap|how would|recommend|develop a plan|build a framework|evaluate|compare|analy[sz]e|strategy|suggest|improve|what if|trade.off|30.60.90|job description|job posting|requirements|based on|given that|in that case|why|how should)\\b/i;
+const analytical=/\b(design|create|propose|architect|hypothetical|imagine|scenario|roadmap|how would|recommend|develop a plan|build a framework|evaluate|compare|analy[sz]e|strategy|suggest|improve|what if|trade.off|30.60.90|job description|job posting|requirements|based on|given that|in that case|why|how should|how can|how do|how to|best practices|flaky|optimi[sz]e|troubleshoot|debug|reduce|prevent|handle)\b/i;
 const followup=/^(tell me more|more details|can you elaborate|explain more|what about that|and that|why|how|what next|can you expand|give an example|what are the risks|and for api testing)[?.! ]*$/i;
 function shouldUseAI(q){return analytical.test(q)|| (chatHistory.length>0 && followup.test(q.trim())) || q.length>300;}
 async function ask(q){
@@ -269,7 +269,7 @@ async function ask(q){
   }else a=local||{answer:'AI is not configured. Please contact Pradyumna for further details.',contact:true};
  }catch(err){
   console.warn('P-Bot AI request failed:',err);
-  a=localRecruiterAnswer(q)||{answer:'AI is temporarily unavailable. Please contact Pradyumna for more details.',contact:true};
+  a=shouldUseAI(q)?{answer:'I could not complete the technical analysis right now. Please try again shortly.',contact:false}:(localRecruiterAnswer(q)||{answer:'AI is temporarily unavailable. Please contact Pradyumna for more details.',contact:true});
  }finally{
   chatBusy=false;$('#send-question').disabled=!$('#question').value.trim();
  }
