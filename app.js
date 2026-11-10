@@ -71,3 +71,60 @@ async function api(path,payload,kind){if(!config.apiBase||!challenges[kind])thro
 if(config.apiBase&&config.turnstileSiteKey){$('.delivery-note').textContent='Your name, email and message will be sent to Pradyumna through our email delivery provider. Please avoid sensitive information.';$('.disclosure').textContent='AI portfolio assistant. Messages are processed by an AI service; answers may be imperfect. Contact Pradyumna for confirmation.';$('.privacy').textContent='Chat is processed by our AI provider. Optional microphone input may use your browser’s speech service. Spoken answers use a synthetic voice.';window.portfolioChallengeReady=()=>{for(const kind of ['chat','contact'])challenges[kind]=window.turnstile.render('#'+kind+'-challenge',{sitekey:config.turnstileSiteKey,action:kind,theme:'auto'})};const script=document.createElement('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?onload=portfolioChallengeReady&render=explicit';script.async=true;document.head.append(script)}
 $('#message-form').onsubmit=async e=>{e.preventDefault();const status=$('#message-status'),button=$('#send-message');if(button.disabled)return;const fields={name:$('#sender-name').value.trim(),email:$('#sender-email').value.trim(),subject:$('#message-subject').value.trim(),message:$('#message-body').value.trim()};if(Object.values(fields).some(x=>!x)){status.textContent='Please complete every field.';return}if($('#message-form [name=website]').value){status.textContent='Unable to submit. Please email Pradyumna directly.';return}button.disabled=true;button.textContent='Sending…';status.textContent='Submitting your message…';try{const r=await fetch('https://formsubmit.co/ajax/pradyumnavissapragada@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({...fields,_subject:'Portfolio: '+fields.subject,_url:'https://pradyumna92.github.io/pradyumna.github.io/',_template:'table',_honey:''}),signal:AbortSignal.timeout(20000)});const data=await r.json();if(!r.ok||!(data.success===true||data.success==='true'))throw Error('Delivery service did not accept the message');if(/activat|confirm.*email/i.test(data.message||'')){status.textContent='The form owner must activate email delivery before your message can be delivered. Please contact Pradyumna by email or phone.'}else{status.textContent='Your message was accepted by the email service. Thank you!';$('#message-form').reset()}}catch{status.textContent='We could not confirm submission. Your message is preserved. Please email pradyumnavissapragada@gmail.com or call +49 152 38763124.'}finally{button.disabled=false;button.textContent='Send'}};
 $('#nav-toggle').onclick=()=>{const expanded=$('#nav-toggle').getAttribute('aria-expanded')==='true';$('#nav-toggle').setAttribute('aria-expanded',String(!expanded));$('header').classList.toggle('nav-open',!expanded)};$$('nav a').forEach(a=>a.addEventListener('click',()=>{$('header').classList.remove('nav-open');$('#nav-toggle').setAttribute('aria-expanded','false')}));
+
+
+/* Portfolio showcase: architecture examples, not executed tests. */
+const frameworkExamples={
+ui:{title:'UI / E2E testing',description:'User journeys with stable locators, isolated contexts and actionable failure traces.',code:`import { test, expect } from '@playwright/test';
+
+test('dashboard loads', async ({ page }) => {
+  await page.goto('/dashboard');
+  await expect(page.getByRole('heading',
+    { name: 'Dashboard' })).toBeVisible();
+});`},
+api:{title:'API testing',description:'Fast service checks with shared request contexts, response validation and explicit assertions.',code:`import { test, expect } from '@playwright/test';
+
+test('health API responds', async ({ request }) => {
+  const response = await request.get('/api/health');
+  expect(response.ok()).toBeTruthy();
+  expect(await response.json()).toMatchObject({
+    status: 'ok'
+  });
+});`},
+fixtures:{title:'Reusable fixtures',description:'Typed test setup centralizes data, authentication and lifecycle cleanup.',code:`import { test as base } from '@playwright/test';
+
+type Fixtures = { accountId: string };
+export const test = base.extend<Fixtures>({
+  accountId: async ({}, use) => {
+    const id = 'demo-account';
+    await use(id);
+  }
+});`},
+ci:{title:'CI / Quality gates',description:'Run smoke checks first, publish reports and use failed critical paths as release signals.',code:`# Example GitHub Actions step
+- name: Install dependencies
+  run: npm ci
+- name: Install Playwright
+  run: npx playwright install --with-deps
+- name: Run smoke tests
+  run: npx playwright test --grep @smoke
+- name: Upload report
+  uses: actions/upload-artifact@v4
+  with:
+    name: playwright-report
+    path: playwright-report/`}
+};
+document.querySelectorAll('[data-layer]').forEach(button=>button.addEventListener('click',()=>{
+  const item=frameworkExamples[button.dataset.layer];if(!item)return;
+  document.querySelectorAll('[data-layer]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+  document.getElementById('framework-title').textContent=item.title;
+  document.getElementById('framework-description').textContent=item.description;
+  document.getElementById('framework-code').textContent=item.code;
+}));
+const labToggle=document.getElementById('lab-toggle');
+if(labToggle)labToggle.addEventListener('click',()=>{
+  const details=document.getElementById('lab-details');
+  const opening=details.hidden;
+  details.hidden=!opening;
+  labToggle.setAttribute('aria-expanded',String(opening));
+  labToggle.textContent=opening?'Hide Quality Lab':'Explore Quality Lab';
+});
