@@ -69,7 +69,32 @@ const commonFAQs=[
  {keys:/\b(available|availability|notice period|start date|salary|compensation|rate|remote|hybrid|relocat|visa|work permit|citizenship)\b/i,answer:"Those details can change and are not verified by the portfolio. Please email Pradyumna directly to discuss current availability, work arrangements or compensation.",contact:true},
  {keys:/\b(schedule|meeting|appointment|calendar|book a call)\b/i,answer:"I can’t schedule meetings directly. Please email Pradyumna with your preferred date, time and reason for reaching out.",contact:true}
 ];
+function casualAnswer(q,previousTopic=''){
+ const t=q.trim().toLowerCase().replace(/[!?.,]+$/,'').trim();
+ if(/^(hi|hello|hey|hello there|hi there|hey there|namaste|good morning|good afternoon|good evening)$/.test(t))
+   return {answer:"Hello there! 👋 Welcome to Pradyumna's portfolio. How can I help you today?"};
+ if(/^(how are you|how are you doing|how's it going|how is it going|how do you do)$/.test(t))
+   return {answer:"I'm doing well and ready to help! 😊 How are you? Would you like to explore Pradyumna's work or just ask me a question?"};
+ if(/^(how is your day|how's your day|how was your day|how is your day going|how's your day going)$/.test(t))
+   return {answer:"Thanks for asking! My day is going well—I'm here helping visitors explore this portfolio. How's your day going?"};
+ if(/^(what's up|whats up|sup|what are you up to|what's going on)$/.test(t))
+   return {answer:"Not much—just here to help! 😄 You can ask me about Pradyumna's career, automation skills, release leadership or anything I can reliably answer."};
+ if(/^(i'm (good|fine|great|okay|ok)|i am (good|fine|great|okay|ok)|doing (good|well|great)|not bad)$/.test(t))
+   return {answer:"Glad to hear that! 😊 What would you like to chat about?"};
+ if(/^(i'm (not good|bad|tired)|i am (not good|bad|tired)|not great)$/.test(t))
+   return {answer:"Sorry to hear that. I hope things get better. If you'd like, we can chat about the portfolio or I can help you find Pradyumna's contact details."};
+ if(/^(what('s| is) the time|what time is it|current time|tell me the time|what's the date|what is the date|today's date|what day is it)$/.test(t)){
+   const now=new Date();const date=/date|day/.test(t);
+   return {answer:date?"According to your device, today is "+new Intl.DateTimeFormat(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(now)+".":"According to your device, the local time is "+new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(now)+".",};
+ }
+ if(/^(what('s| is) happening (around|in) the world|world news|latest news|what('s| is) in the news|current events|what's happening globally)$/.test(t))
+   return {answer:"I don't have a live news feed, so I can't verify today's headlines. You can check Reuters or BBC News for current world updates. I'm happy to help with questions about this portfolio!",news:true};
+ if(/^(tell me more|more details|can you elaborate|explain more|what about that|and that)$/.test(t)&&!previousTopic)
+   return {answer:"Of course! What would you like to know more about—Pradyumna's experience, automation framework, achievements or release leadership?"};
+ return null;
+}
 function answerQuestion(q,previousTopic=''){
+ const casual=casualAnswer(q,previousTopic);if(casual)return casual;
  const text=q.trim().toLowerCase();
  if(/^(hi|hello|hey|good (morning|afternoon|evening)|namaste|hello there)[!. ]*$/.test(text))
    return {answer:"Hello! Welcome to Pradyumna’s portfolio. Would you like to know about his automation skills, professional experience or release leadership?"};
@@ -97,9 +122,11 @@ $$('[data-chat]').forEach(b=>b.onclick=()=>openChat(b));$('#chat-launch').onclic
 message('Hi, I’m Pradyumna’s portfolio guide. Ask about his career, technical skills or impact. I can also help you contact him directly.','assistant');
 let chatBusy=false;const history=[];let lastKnownTopic="";
 async function ask(q){q=q.trim().slice(0,500);if(!q||chatBusy)return;message(q,'user');$('#question').value='';$('#send-question').disabled=true;let a;
-if(config.apiBase&&config.turnstileSiteKey){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch{a=answerQuestion(q,lastKnownTopic)}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
+const casual=casualAnswer(q,lastKnownTopic);
+if(casual){a=casual}
+else if(config.apiBase&&config.turnstileSiteKey){chatBusy=true;try{const data=await api('/chat',{messages:[...history,{role:'user',content:q}].slice(-8)},'chat');a={answer:data.answer,contact:!!data.handoff};history.push({role:'user',content:q},{role:'assistant',content:a.answer});}catch{a=answerQuestion(q,lastKnownTopic)}finally{chatBusy=false;$('#send-question').disabled=!$('#question').value.trim()}}
 else a=answerQuestion(q,lastKnownTopic);
-if(!a.contact&& !/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
+if(!a.contact&&!casual&& !/^(tell me more|more details|can you elaborate|explain more|what about that|and that)[?.! ]*$/i.test(q))lastKnownTopic=q;
 message(a.answer,'assistant',a.contact);if(readAnswers&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(a.answer))}}
 $('#question').oninput=()=>$('#send-question').disabled=!$('#question').value.trim();$('#chat-form').onsubmit=e=>{e.preventDefault();ask($('#question').value)};$$('[data-question]').forEach(b=>b.onclick=()=>ask(b.dataset.question));
 $('#speak').onclick=()=>{if(!('speechSynthesis'in window)){$('#voice-status').textContent='Audio playback isn’t supported here. Please read the text answers.';return}readAnswers=!readAnswers;$('#speak').textContent='Read answers: '+(readAnswers?'on':'off');$('#speak').setAttribute('aria-pressed',String(readAnswers));if(!readAnswers)speechSynthesis.cancel()};
